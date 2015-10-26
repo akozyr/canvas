@@ -27,7 +27,7 @@ $(document).ready(function()
         context.putImageData(imageData, 0, 0);
     }
 
-    img.src = "/img/5.bmp";
+    img.src = "/img/4.bmp";
 });
 
 var Canny = function(imageData)
@@ -131,9 +131,7 @@ var Canny = function(imageData)
         var a = outputPixels[index1];
         var b = outputPixels[index2];
         var c = outputPixels[index3];
-        var qwerty;
-
-        /*
+        
         if (outputPixels[index1] > outputPixels[index2]) {
             outputPixels[index2] = 0;
             outputPixels[index2 + 1] = 0;
@@ -159,7 +157,7 @@ var Canny = function(imageData)
             outputPixels[index3 + 2] = 0;
             
         }
-        */
+        
         /*
         if (b >= a && b >= c) {
             outputPixels[index1] = 0;
@@ -174,7 +172,7 @@ var Canny = function(imageData)
             outputPixels[index2 + 2] = 0;
         }
         */
-
+        /*
         if (arrayOfAngles[index1] == arrayOfAngles[index2] && arrayOfAngles[index2] == arrayOfAngles[index3]) {
             if (b >= a && b >= c) {
                 outputPixels[index1] = 0;
@@ -215,6 +213,7 @@ var Canny = function(imageData)
                 outputPixels[index2 + 2] = 0;
             }
         }
+        */
     }
 
     function suppressNonMaximum(x, y)
@@ -229,33 +228,23 @@ var Canny = function(imageData)
             /*if (arrayOfAngles[4 * (x + y * imgWidth)] === -0) {
                 suppress(index + 4, index, index - 4);
             } else {*/
+                if (arrayOfAngles[4 * (x + y * imgWidth)] < 0) {
+                    arrayOfAngles[4 * (x + y * imgWidth)] += 180;
+                }
+
                 switch (arrayOfAngles[4 * (x + y * imgWidth)]) {
                     case 0:
+                        suppress(index + 4 * imgWidth, index, index - 4 * imgWidth);
+                        break;
+                    case 45:
+                        suppress(index + 4 * (imgWidth + 1), index, index - 4 * (imgWidth + 1));
+                        break;
+                    case 90:
                         suppress(index - 4, index, index + 4);
                         break;
-                    case /*45*/-45:
-                        if (Math.abs(arrayOfAngles[index - 4]) == 90) {
-                            suppress(index - 4 * (imgWidth - 1), index, index + 4 * (imgWidth - 1));
-                        } else {
-                            suppress(index + 4 * (imgWidth - 1), index, index - 4 * (imgWidth - 1));
-                        }
+                    case 135:
+                        suppress(index + 4 * (imgWidth - 1), index, index - 4 * (imgWidth - 1));
                         break;
-                    /*case 90:
-                        suppress(index + 4 * imgWidth, index, index - 4 * imgWidth);
-                        break;*/
-                    case /*135*/45:
-                        suppress(index - 4 * (imgWidth + 1), index, index + 4 * (imgWidth + 1));
-                        break;
-                    /*case -45:
-                        suppress(index - 4 * (imgWidth - 1), index, index + 4 * (imgWidth - 1));
-                        break;*/
-                    case -90:
-                    case 90:
-                        suppress(index - 4 * imgWidth, index, index + 4 * imgWidth);
-                        break;
-                    /*case -135:
-                        suppress(index - 4 * (imgWidth + 1), index, index + 4 * (imgWidth + 1));
-                        break;*/
                     default:
                         break;
                 }
